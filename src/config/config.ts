@@ -1,0 +1,19 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+function requireEnv(key: string) :string {
+    const value = process.env[key];
+    if (!value) {
+        throw new Error(`Environment variable ${key} is required`)
+    }
+    return value;
+}
+
+export const ENV = {
+    isProd: process.env.NODE === 'production',
+    PORT: process.env.PORT ?? 3000,
+    NODE_ENV: process.env.NODE ?? 'development',
+    JWT_SECRET: requireEnv('JWT_SECRET'),
+    DATABASE_URL: requireEnv('DATABASE_URL')
+}
