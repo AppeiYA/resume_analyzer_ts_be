@@ -104,7 +104,7 @@ export class AuthServiceImpl implements AuthService {
   async getAccessToken(refresh_token: string): Promise<string | BadException> {
     // validate refresh_token
     const validate = await verifyRefreshToken(refresh_token)
-    if(!validate.valid || !validate.expired){
+    if(!validate.valid || validate.expired){
       return new BadException("Invalid or expired refresh token")
     }
     // sign new token
