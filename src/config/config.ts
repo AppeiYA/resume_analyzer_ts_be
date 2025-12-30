@@ -16,5 +16,6 @@ export const ENV = {
     NODE_ENV: process.env.NODE ?? 'development',
     JWT_SECRET: requireEnv('JWT_SECRET'),
     DATABASE_URL: requireEnv('DATABASE_URL'),
-    JWT_REFRESH_SECRET: requireEnv('JWT_REFRESH_SECRET')
+    JWT_REFRESH_SECRET: requireEnv('JWT_REFRESH_SECRET'),
+    GEMINI_API_KEY: requireEnv('GEMINI_API_KEY')
 }

@@ -2,6 +2,7 @@ import multer from "multer";
 import { BadException } from "../errors/errors.js";
 import { extractTextFromFile } from "../utils/ExtractText.js";
 import { logger } from "../utils/logger.js";
+import { analyzeResume } from "../utils/GeminiAnalyze.js";
 export interface UserService {
   analyzeResume(
     file: Express.Multer.File,
@@ -18,10 +19,12 @@ export class UserServiceImpl implements UserService {
     try {
       // extract text and return for now
       const result = await extractTextFromFile(file);
-      return result;
+      //   try analyzing
+      const analyzed = await analyzeResume(result);
+      return analyzed;
     } catch (err) {
-        logger.error(err)
-        throw new BadException("Internal server error")
+      logger.error(err);
+      throw new BadException("Internal server error");
     }
   }
 }
