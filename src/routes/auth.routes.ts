@@ -1,7 +1,10 @@
 import express from "express";
 import authController from "../controllers/auth.controller.js";
 import { RequestValidateBodyMiddleware } from "../middleware/Request.validator.middleware.js";
-import { CreateUserSchema } from "../validators/user.schema.js";
+import {
+  CreateUserSchema,
+  LoginUserSchema,
+} from "../validators/user.schema.js";
 
 const authRouter = express.Router();
 
@@ -9,6 +12,12 @@ authRouter.post(
   "/register",
   RequestValidateBodyMiddleware(CreateUserSchema),
   authController.registerUser
+);
+
+authRouter.post(
+  "/login",
+  RequestValidateBodyMiddleware(LoginUserSchema),
+  authController.loginUser
 );
 
 export default authRouter;

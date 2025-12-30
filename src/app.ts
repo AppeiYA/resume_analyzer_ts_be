@@ -6,7 +6,7 @@ import { ENV } from "./config/config.js";
 import compression from "compression";
 import morgan from "morgan";
 import { StatusCodes } from "./shared/StatusCodes.js";
-import v1router from "./V1Router.js";
+import v1router from "./router.v1.js";
 
 const app: Express = express();
 

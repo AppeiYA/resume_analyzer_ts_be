@@ -9,9 +9,12 @@ export const DB = new Pool({
   idleTimeoutMillis: 30_000,
   connectionTimeoutMillis: 5_000,
 });
-
+let logged: boolean = false;
 DB.on("connect", () => {
-  logger.info(`Database client connected`);
+  if (!logged) {
+    logger.info(`Database client connected`);
+    logged = true;
+  }
 });
 
 DB.on("error", (err: Error) => {

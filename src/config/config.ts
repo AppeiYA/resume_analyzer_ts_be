@@ -15,5 +15,6 @@ export const ENV = {
     PORT: process.env.PORT ?? 3000,
     NODE_ENV: process.env.NODE ?? 'development',
     JWT_SECRET: requireEnv('JWT_SECRET'),
-    DATABASE_URL: requireEnv('DATABASE_URL')
+    DATABASE_URL: requireEnv('DATABASE_URL'),
+    JWT_REFRESH_SECRET: requireEnv('JWT_REFRESH_SECRET')
 }

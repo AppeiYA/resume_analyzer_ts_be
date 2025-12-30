@@ -1,24 +1,25 @@
 import type { Request, Response, NextFunction } from "express";
 import type { ObjectSchema } from "joi";
 import { StatusCodes } from "../shared/StatusCodes.js";
+import { AppResponse } from "../shared/RequestResponse.js";
 
 export const RequestValidateBodyMiddleware =
   (schema: ObjectSchema) =>
   (req: Request, res: Response, next: NextFunction) => {
-    if(!req.body){
-        return res.status(StatusCodes.BAD_REQUEST).json({
-            message: "no request body"
-        })
+    if (!req.body) {
+      return AppResponse(res, "no request body", null, StatusCodes.BAD_REQUEST);
     }
     const { error, value } = schema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
     });
     if (error) {
-      return res.status(422).json({
-        message: "Validation failed",
-        details: error.details.map((d) => d.message),
-      });
+      return AppResponse(
+        res,
+        "Validation failed",
+        error.details.map((d) => d.message),
+        StatusCodes.UNPROCESSABLE_ENTITY
+      );
     }
     req.body = value;
     next();
