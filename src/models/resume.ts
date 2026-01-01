@@ -8,3 +8,9 @@ export interface ResumeReport {
     report_details: any,
     created_at: Date
 }
+
+export interface AnalysisResponse {
+    overall_score: number,
+    summary: string,
+    report_details: any
+}

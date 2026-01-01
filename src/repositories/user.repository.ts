@@ -1,12 +1,12 @@
-import {query} from "../db/query.js"
-import { BadException, NotFoundError } from "../errors/errors.js"
-import type { CreateUserRequest, User } from "../models/users.js"
-import { logger } from "../utils/logger.js"
-import { userQueries } from "./queries/user.queries.js"
+import { query } from "../db/query.js";
+import { BadException, NotFoundError } from "../errors/errors.js";
+import type { CreateUserRequest, User } from "../models/users.js";
+import { logger } from "../utils/logger.js";
+import { userQueries } from "./queries/user.queries.js";
 
 export interface UserRepository {
-    createUser(params: CreateUserRequest):Promise<void>
-    getUserByEmail(email: string): Promise<User | NotFoundError>
+  createUser(params: CreateUserRequest): Promise<void>;
+  getUserByEmail(email: string): Promise<User | NotFoundError>;
 }
 
 export class UserRepositoryImpl implements UserRepository {
@@ -20,9 +20,11 @@ export class UserRepositoryImpl implements UserRepository {
       ]);
     } catch (error) {
       if (error instanceof Error) {
-        logger.error(`Create in db error: ${error.message}`)
+        logger.error(`Create in db error: ${error.message}`);
         throw new BadException(error.message);
       }
+      logger.error(error);
+      throw new BadException("Internal server error");
     }
   }
 
