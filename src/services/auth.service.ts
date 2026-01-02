@@ -18,7 +18,7 @@ export interface AuthService {
   loginUser(
     params: LoginUserRequest
   ): Promise<LoginUserResponse | NotFoundError | BadException>;
-  getAccessToken(refresh_token: string):Promise<string | BadException>
+  getAccessToken(refresh_token: string): Promise<string | BadException>;
 }
 
 export class AuthServiceImpl implements AuthService {
@@ -28,10 +28,10 @@ export class AuthServiceImpl implements AuthService {
     try {
       // Check if email already exists
       const existingUser = await this.userRepo.getUserByEmail(params.email);
+      console.log(existingUser);
 
-      if (existingUser) {
+      if (!(existingUser instanceof NotFoundError))
         throw new BadException("Email already in use");
-      }
 
       // Hash password
       const hashedPassword = await hashPassword(params.password);
@@ -103,16 +103,16 @@ export class AuthServiceImpl implements AuthService {
 
   async getAccessToken(refresh_token: string): Promise<string | BadException> {
     // validate refresh_token
-    const validate = await verifyRefreshToken(refresh_token)
-    if(!validate.valid || validate.expired){
-      return new BadException("Invalid or expired refresh token")
+    const validate = await verifyRefreshToken(refresh_token);
+    if (!validate.valid || validate.expired) {
+      return new BadException("Invalid or expired refresh token");
     }
     // sign new token
-    const token = await signToken(validate.decoded, false)
+    const token = await signToken(validate.decoded, false);
     if (token instanceof Error) {
-      throw new Error("Error signing token")
+      throw new Error("Error signing token");
     }
-    return token.token
+    return token.token;
   }
 }
 

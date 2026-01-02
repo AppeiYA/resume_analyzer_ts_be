@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS resume_reports
+ALTER COLUMN overall_score TYPE NUMERIC(5, 2);

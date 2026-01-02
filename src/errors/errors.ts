@@ -23,3 +23,9 @@ export class BadException extends AppError {
         super(message, StatusCodes.BAD_REQUEST)
     }
 }
+
+export class InternalServerError extends AppError{
+    constructor(message: string = 'Internal Server Error'){
+        super(message, StatusCodes.INTERNAL_SERVER_ERROR)
+    }
+}

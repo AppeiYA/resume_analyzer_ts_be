@@ -14,3 +14,8 @@ export interface AnalysisResponse {
     summary: string,
     report_details: any
 }
+
+export interface DeleteAnalysisReport {
+    user_id: string;
+    report_id: string;
+}

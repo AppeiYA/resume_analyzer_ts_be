@@ -15,3 +15,6 @@ export const LoginUserSchema = Joi.object({
 export const GetAccessToken = Joi.object({
   refresh_token: Joi.string().required(),
 });
+export const DeleteReportSchema = Joi.object({
+  report_id: Joi.string().required(),
+});
