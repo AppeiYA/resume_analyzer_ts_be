@@ -5,6 +5,7 @@ import rateLimit from "express-rate-limit";
 import { ENV } from "./config/config.js";
 import compression from "compression";
 import morgan from "morgan";
+import cookieParser from 'cookie-parser'
 import { StatusCodes } from "./shared/StatusCodes.js";
 import v1router from "./router.v1.js";
 
@@ -31,6 +32,7 @@ app.use(compression());
 
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser(ENV.COOKIE_SECRET));
 
 if (!ENV.isProd) {
   app.use(morgan("dev"));

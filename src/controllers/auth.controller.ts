@@ -4,7 +4,11 @@ import { StatusCodes } from "../shared/StatusCodes.js";
 import { BadException, NotFoundError } from "../errors/errors.js";
 import type { CreateUserRequest, LoginUserRequest } from "../models/users.js";
 import { LoginUserDto } from "../dtos/dtos.js";
-import { AppResponse } from "../shared/RequestResponse.js";
+import {
+  AppResponse,
+  AppResponseWithCookie,
+  ClearCookie,
+} from "../shared/RequestResponse.js";
 
 export class AuthController {
   constructor(private authServ: AuthService) {}
@@ -43,8 +47,15 @@ export class AuthController {
       if (result instanceof BadException) {
         return AppResponse(res, result.message, null, result.statusCode);
       }
+      const { refresh_token, ...response } = result;
 
-      return AppResponse(res, "Login successful", result, StatusCodes.OK);
+      return AppResponseWithCookie(
+        res,
+        "Login successful",
+        response,
+        StatusCodes.OK,
+        refresh_token
+      );
     } catch (error) {
       if (error instanceof NotFoundError) {
         return AppResponse(res, error.message, null, error.statusCode);
@@ -62,7 +73,10 @@ export class AuthController {
   };
 
   public getAccessToken = async (req: Request, res: Response) => {
-    const refresh_token = req.body.refresh_token;
+    const refresh_token = req.cookies.ran;
+    if (!refresh_token) {
+      return AppResponse(res, "User already logged out", null, StatusCodes.NOT_FOUND);
+    }
     try {
       const result = await this.authServ.getAccessToken(refresh_token);
       if (result instanceof BadException) {
@@ -75,20 +89,38 @@ export class AuthController {
         { token: result },
         StatusCodes.OK
       );
-    } catch (error) {
-        if (error instanceof NotFoundError) {
-          return AppResponse(res, error.message, null, error.statusCode);
-        }
-        if (error instanceof BadException) {
-          return AppResponse(res, error.message, null, error.statusCode);
-        }
-        return AppResponse(
-          res,
-          "Internal server error",
-          null,
-          StatusCodes.INTERNAL_SERVER_ERROR
-        );
+    } catch (error: any) {
+      if (error instanceof NotFoundError) {
+        return AppResponse(res, error.message, null, error.statusCode);
+      }
+      if (error instanceof BadException) {
+        return AppResponse(res, error.message, null, error.statusCode);
+      }
+      return AppResponse(
+        res,
+        `Internal server error: ${error?.message}`,
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
     }
+  };
+
+  public logout = async (req: Request, res: Response) => {
+    const token = req.cookies.ran;
+        if (!token) {
+          return AppResponse(
+            res,
+            "User already logged out",
+            null,
+            StatusCodes.NOT_FOUND
+          );
+        }
+    const response = await this.authServ.logout(token);
+    if (response instanceof BadException) {
+      return AppResponse(res, response.message, null, response.statusCode);
+    }
+
+    return ClearCookie(res, "Log Out Successful", null, StatusCodes.OK);
   };
 }
 

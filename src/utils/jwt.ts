@@ -22,8 +22,9 @@ export const signToken = async (
     if (refreshToken) {
       newRefreshToken = await signRefreshToken(payload);
     }
-    if (newRefreshToken instanceof Error || !newRefreshToken)
+    if ((newRefreshToken instanceof Error || !newRefreshToken) && refreshToken) {
       return new Error("Error signing refresh token" + refreshToken);
+    }
     return { token, newRefreshToken };
   } catch (error) {
     return new Error("Error signing token: " + error);

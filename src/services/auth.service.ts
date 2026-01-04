@@ -19,6 +19,7 @@ export interface AuthService {
     params: LoginUserRequest
   ): Promise<LoginUserResponse | NotFoundError | BadException>;
   getAccessToken(refresh_token: string): Promise<string | BadException>;
+  logout(token: string): Promise<void | BadException>;
 }
 
 export class AuthServiceImpl implements AuthService {
@@ -107,12 +108,33 @@ export class AuthServiceImpl implements AuthService {
     if (!validate.valid || validate.expired) {
       return new BadException("Invalid or expired refresh token");
     }
+    const payload = {
+      email: validate.decoded.email,
+      user_id: validate.decoded.user_id,
+    };
     // sign new token
-    const token = await signToken(validate.decoded, false);
+    const token = await signToken(payload, false);
     if (token instanceof Error) {
       throw new Error("Error signing token");
     }
     return token.token;
+  }
+
+  async logout(token: string): Promise<void | BadException> {
+    try {
+      const JwtPayload = await verifyRefreshToken(token);
+      if (!JwtPayload.valid || JwtPayload.expired) {
+        return new BadException("Token expired. User already logged out");
+      }
+
+      const userId = JwtPayload?.decoded?.user_id;
+
+      if (!userId) {
+        return new BadException("Unauthorized logout request");
+      }
+    } catch (error) {
+      return new BadException("Error Logging Out");
+    }
   }
 }
 

@@ -20,4 +20,14 @@ authRouter.post(
   authController.loginUser
 );
 
+authRouter.post(
+  "/logout",
+  authController.logout
+)
+
+authRouter.get(
+  "/access_token",
+  authController.getAccessToken
+)
+
 export default authRouter;

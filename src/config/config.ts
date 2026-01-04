@@ -21,4 +21,5 @@ export const ENV = {
       : requireEnv("DATABASE_URL"),
   JWT_REFRESH_SECRET: requireEnv("JWT_REFRESH_SECRET"),
   GEMINI_API_KEY: requireEnv("GEMINI_API_KEY"),
+  COOKIE_SECRET: requireEnv("COOKIE_SECRET"),
 };
