@@ -14,7 +14,9 @@ const app: Express = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: ENV.isProd ? ["https://deployed-frontend-domain.com"] : "*",
+    origin: ENV.isProd
+      ? ["https://deployed-frontend-domain.com"]
+      : ["http://localhost:3000"], 
     credentials: true,
   })
 );
