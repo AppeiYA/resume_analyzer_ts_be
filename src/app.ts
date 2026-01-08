@@ -5,7 +5,7 @@ import rateLimit from "express-rate-limit";
 import { ENV } from "./config/config.js";
 import compression from "compression";
 import morgan from "morgan";
-import cookieParser from 'cookie-parser'
+import cookieParser from "cookie-parser";
 import { StatusCodes } from "./shared/StatusCodes.js";
 import v1router from "./router.v1.js";
 
@@ -15,8 +15,10 @@ app.use(helmet());
 app.use(
   cors({
     origin: ENV.isProd
-      ? ["https://deployed-frontend-domain.com"]
-      : ["http://localhost:3000"], 
+      ? [
+          "https://resume-analyzer-ts-oemb0hndc-peterpauls-projects-8c2d3e84.vercel.app",
+        ]
+      : ["http://localhost:3000"],
     credentials: true,
   })
 );
@@ -40,17 +42,17 @@ if (!ENV.isProd) {
   app.use(morgan("dev"));
 }
 
-// routes 
-app.get("/", (_req: Request, res: Response)=>{
-    res.status(StatusCodes.OK).send("Welcome to Resume Analyzer API")
-})
-app.get("/health", (_req: Request, res: Response)=> {
-    res.status(StatusCodes.OK).json({status: "GREEN OK"});
-})
-app.use("/api/v1", v1router)
+// routes
+app.get("/", (_req: Request, res: Response) => {
+  res.status(StatusCodes.OK).send("Welcome to Resume Analyzer API");
+});
+app.get("/health", (_req: Request, res: Response) => {
+  res.status(StatusCodes.OK).json({ status: "GREEN OK" });
+});
+app.use("/api/v1", v1router);
 
-app.use((_req: Request, res: Response)=>{
-    res.status(StatusCodes.NOT_FOUND).json({error: "Route not found"})
-})
+app.use((_req: Request, res: Response) => {
+  res.status(StatusCodes.NOT_FOUND).json({ error: "Route not found" });
+});
 
 export default app;
