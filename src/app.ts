@@ -17,6 +17,7 @@ app.use(
     origin: ENV.isProd
       ? [
           "https://resume-analyzer-ts-oemb0hndc-peterpauls-projects-8c2d3e84.vercel.app",
+          "https://resume-analyzer-ts-fe.vercel.app",
         ]
       : ["http://localhost:3000"],
     credentials: true,
